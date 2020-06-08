@@ -4,7 +4,7 @@
     "description": "teste npm",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/eduardo-dias2020/testeNPM1.git"
+        "url": "git+https://github.com/eduardo-dias2020/repo_teste_npm.git"
     },
     "main": "index.js",
     "dependencies": {
