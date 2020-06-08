@@ -1,0 +1,30 @@
+{
+    "name": "teste2",
+    "version": "1.0.0",
+    "description": "teste npm",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/eduardo-dias2020/testeNPM1.git"
+    },
+    "main": "index.js",
+    "dependencies": {
+        "cypress": "^4.7.0",
+        "cypress-cucumber-preprocessor": "^2.4.0",
+        "fs-extra": "^9.0.1",
+        "readline-sync": "^1.4.10",
+        "rimraf": "^3.0.2"
+    },
+    "devDependencies": {
+        "prettier": "2.0.5"
+    },
+    "scripts": {
+        "test": "npx cypress open",
+        "deleteExamplesFolder": "node scripts/deleteExamplesFolder.js",
+        "createFeaturesFolder": "if not exist cypress\\integration\\Features mkdir cypress\\integration\\Features",
+        "createDictionaryFile": "node scripts/createDictionary.js dictionary.json",
+        "createVariablesFile": "node scripts/createDictionary.js variables.json",
+        "editCypressJsonFile": "node scripts/editCypressJson.js"
+    },
+    "author": "Eduardo Carneiro",
+    "license": "ISC"
+}
