@@ -17,9 +17,11 @@
     "devDependencies": {
         "prettier": "2.0.5"
     },
+    "bin": {
+        "cypress": "bin/scripts"
+    },
     "scripts": {
-        "postinstall": "npm test",
-        "test": "npx cypress open",
+        "openCypress": "npx cypress open",
         "deleteExamplesFolder": "node scripts/deleteExamplesFolder.js",
         "createFeaturesFolder": "if not exist cypress\\integration\\Features mkdir cypress\\integration\\Features",
         "createDictionaryFile": "node scripts/createDictionary.js dictionary.json",
