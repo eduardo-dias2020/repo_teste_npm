@@ -18,7 +18,7 @@
         "prettier": "2.0.5"
     },
     "scripts": {
-        "postinstall": "npm test && npm run deleteExamplesFolder && npm run createFeaturesFolder && npm run createDictionaryFile && npm run createVariablesFile && npm run editCypressJsonFile",
+        "postinstall": "npm test",
         "test": "npx cypress open",
         "deleteExamplesFolder": "node scripts/deleteExamplesFolder.js",
         "createFeaturesFolder": "if not exist cypress\\integration\\Features mkdir cypress\\integration\\Features",
