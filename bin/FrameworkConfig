@@ -1,6 +1,29 @@
-const fs = require('fs');
+#!/usr/bin/env node
 
+const fs = require('fs');
+var rimraf = require('rimraf')
 var readlineSync = require('readline-sync');
+
+rimraf.sync("cypress/integration/examples")
+
+function createFile(file) {
+    try {
+        if (!fs.existsSync(file)) {
+            try {
+                fs.writeFileSync(file, '', function(err) {
+                    if (err) throw err;
+                    console.log("File " + file + " created successfully.");
+                });
+            } catch (err) {
+                console.error("Error searching for file " + file + ".")
+            }
+        } else {
+            console.log("File " + file + " already exists.");
+        }
+    } catch (err) {
+        console.error("Error searching for file " + file + ".")
+    }
+}
 
 function addBaseURL(data) {
     if (!data.hasOwnProperty("baseUrl")) {
@@ -97,4 +120,6 @@ function editCypressJson() {
     fs.writeFileSync("cypress.json", JSON.stringify(data, null, 4));
 }
 
+createFile("dictionary.json")
+createFile("variables.json")
 editCypressJson()
