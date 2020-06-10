@@ -1,6 +1,6 @@
 {
     "name": "teste_xresd_zsdf",
-    "version": "2.1.4",
+    "version": "2.1.5",
     "description": "teste_xresd_zsdf",
     "repository": {
         "type": "git",
@@ -18,7 +18,9 @@
         "prettier": "2.0.5"
     },
     "bin": {
-        "frameworkTestesE2E": "bin"
+        "Cypress": "bin/Config",
+        "FrameworkTestesE2E": "bin/FrameworkConfig"
+
     },
     "scripts": {
         "editCypressJsonFile": "node scripts/editCypressJson.js"
