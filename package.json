@@ -1,6 +1,6 @@
 {
     "name": "teste_xresd_zsdf",
-    "version": "2.3.7",
+    "version": "2.3.8",
     "description": "teste_xresd_zsdf",
     "repository": {
         "type": "git",
@@ -22,9 +22,7 @@
         "FrameworkTestesE2E": "bin/FrameworkConfig"
 
     },
-    "scripts": {
-        "editCypressJsonFile": "node scripts/editCypressJson.js"
-    },
+    "scripts": {},
     "author": "Eduardo Carneiro",
     "license": "ISC"
 }

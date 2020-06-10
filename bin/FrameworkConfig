@@ -34,7 +34,7 @@ function addBaseURL(data) {
 
 function addScreenshotFolder(data) {
     if (!data.hasOwnProperty("screenshotFolder")) {
-        var ssFolder = readlineSync.question("\nWhere do you want to save the screenshots? ");
+        var ssFolder = readlineSync.question("\nWhere do you want to save the screenshots? ", { defaultInput: 'Screenshots' });
         if (!fs.existsSync(ssFolder)) {
             fs.mkdirSync(ssFolder, { recursive: true })
         }
