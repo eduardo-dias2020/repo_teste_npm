@@ -4,7 +4,13 @@ const fs = require('fs');
 var rimraf = require('rimraf')
 var readlineSync = require('readline-sync');
 
-rimraf.sync("cypress/integration/examples")
+const editCypressJson = require('bin/CypressFileFunctions.js');
+
+const indexFilePath = "cypress/support/index.js"
+
+const pluginsIndexFilePath = fs.readFileSync("cypress/plugins/index.js");
+
+const cypressFilePath = "cypress.json";
 
 function createFile(file) {
     try {
@@ -25,101 +31,47 @@ function createFile(file) {
     }
 }
 
-function addBaseURL(data) {
-    if (!data.hasOwnProperty("baseUrl")) {
-        var url = readlineSync.question("\nWhat's the base url? ", { defaultInput: 'http://' });
-        data.baseUrl = url;
-    }
+function editPluginsIndexFile() {
+    var methods = "\r\n\r\nconst cucumber = require('cypress-cucumber-preprocessor').default\r\n \r\nmodule.exports = (on, config) => {\r\n  on('file:preprocessor', cucumber())\r\n}\r\n"
+    fs.appendFileSync(pluginsIndexFilePath, methods, { 'flags': 'a' });
 }
 
-function addScreenshotFolder(data) {
-    if (!data.hasOwnProperty("screenshotFolder")) {
-        var ssFolder = readlineSync.question("\nWhere do you want to save the screenshots? ", { defaultInput: 'Screenshots' });
-        if (!fs.existsSync(ssFolder)) {
-            fs.mkdirSync(ssFolder, { recursive: true })
-        }
-        data.screenshotFolder = ssFolder;
+function setWhiteList() {
+    var platforms = ['ATD'];
+    var index = readlineSync.keyInSelect(systems, 'Which platform are you testing? ');
+
+    if (platforms[index] === "ATD") {
+        return "\n\n/**\r\n * Function to set a list of cookies that should not be deleted after each test\r\n */\r\nCypress.Cookies.defaults({\r\n    whitelist: ['ASP.NET_SessionId', 'GCCI.17R1_GLINTTOCM.ATENDIMENTO_WEB', 'GC17R101P.DEMOAPL17R101.ATENDIMENTO_WEB']\r\n})"
     }
+
+    return "";
 }
 
-function addVideo(data) {
-    if (!data.hasOwnProperty("video")) {
-        var videos = readlineSync.question("\nWould you like to save videos from test execution (Y/N)? ", {
-            trueValue: ['yes', 'Y', 'y', 'YES']
-        });
-        if (videos === true) {
-            data.video = true
+function editMainIndexFile() {
+    var whiteList = setWhiteList();
+    var importRequire = "\r\nimport 'cypress-pipe'\r\nrequire('cypress-commands');\r\n\r\nconst WaitFunctions = require(\"framework_glintt_tests_e2e/WaitFunctions\");\r\nconst ProcessFilesFunctions = require(\"framework_glintt_tests_e2e/ProcessFilesFunctions\");\r\nconst addContext = require('mochawesome/addContext')"
+    var saveScreenshots = "\r\n\r\n/**\r\n * Function to save a screenshot after each failed test;\r\n * Essencial to build reports.\r\n */\r\nCypress.on('test:after:run', (test, runnable) => {\r\n    if (test.state === 'failed') {\r\n        const screenshotFileName = `${runnable.parent.title} -- ${test.title} (failed).png`\r\n        addContext({ test }, `assets/${Cypress.spec.name}/${screenshotFileName}`)\r\n    }\r\n})"
+    var checkXHR = "\n\n/**\r\n * Function to setup a cypress server before each test;\r\n * Server configured to count active XHR requests.\r\n */\r\nbeforeEach(() => {\r\n    WaitFunctions.checkXHRequests();    \r\n})"
+    var readFiles = "/**\r\n * Function to read the necessary files before the tests start;\r\n */\r\nbefore(() => {\r\n    cy.readFile(\"variables.json\").then(fileVariables => {\r\n        ProcessFilesFunctions.setFileJsonVariables(fileVariables);\r\n    });\r\n    cy.readFile(\"dictionary.json\").then(fileDictionary => {\r\n        ProcessFilesFunctions.setFileDictionary(fileDictionary);\r\n    });\r\n})/**\r\n * Function to read the necessary files before the tests start;\r\n */\r\nbefore(() => {\r\n    cy.readFile(\"variables.json\").then(fileVariables => {\r\n        ProcessFilesFunctions.setFileJsonVariables(fileVariables);\r\n    });\r\n    cy.readFile(\"dictionary.json\").then(fileDictionary => {\r\n        ProcessFilesFunctions.setFileDictionary(fileDictionary);\r\n    });\r\n})"
+    fs.appendFileSync(indexFilePath, importRequire + whiteList + saveScreenshots + checkXHR + readFiles, { 'flags': 'a' });
+}
+
+function verifyAndEditFile(filePath, fileFunction) {
+    try {
+        if (fs.existsSync(filePath)) {
+            fileFunction();
         } else {
-            data.video = false
+            console.log("\nFile " + filePath + " does not exist, please run the command npx cypress open first!\n\n");
         }
+    } catch (err) {
+        console.error("\nError searching for file in " + filePath + "\n\n")
     }
 }
 
-function addWaitForAnimations(data) {
-    if (!data.hasOwnProperty("waitForAnimations")) {
-        var animations = readlineSync.question("\nShould tests wait for animations to end? ", {
-            trueValue: ['yes', 'Y', 'y', 'YES', '']
-        });
-        if (animations === true) {
-            data.waitForAnimations = true
-        } else {
-            data.waitForAnimations = false
-        }
-    }
-}
 
-function addTestFilesFolder(data) {
-    if (!data.hasOwnProperty("testFiles")) {
-        data.testFiles = '**/*.feature';
-        if (!fs.existsSync("cypress/integration/Features")) {
-            fs.mkdirSync("cypress/integration/Features", { recursive: true })
-        }
-    }
-}
-
-function addDefaultTimeout(data) {
-    if (!data.hasOwnProperty("defaultCommandTimeout")) {
-        var validNumber = false;
-        var time = readlineSync.question("\nHow many milliseconds do you want to set for commands timeout? ", { defaultInput: 4000 });
-
-        while (!validNumber) {
-            var timeInt = parseInt(time);
-            if (Number.isInteger(timeInt)) {
-                data.defaultCommandTimeout = timeInt;
-                validNumber = true;
-            } else {
-                time = readlineSync.question("\nPlease insert a valid number! ", { defaultInput: 4000 });
-            }
-        }
-    }
-}
-
-function addReporter(data) {
-    if (!data.hasOwnProperty("reporter")) {
-        data.reporter = "mochawesome"
-    }
-}
-
-function addCommonPathFolder(data) {
-    if (!data.hasOwnProperty("commonPath")) {
-        data.commonPath = "node_modules/framework-testes-automaticos-e2e/cypress/integration/common/*.js"
-    }
-}
-
-function editCypressJson() {
-    const data = JSON.parse(fs.readFileSync("cypress.json"));
-    addBaseURL(data);
-    addScreenshotFolder(data);
-    addVideo(data);
-    addTestFilesFolder(data);
-    addDefaultTimeout(data);
-    addReporter(data);
-    addWaitForAnimations(data);
-    addCommonPathFolder(data);
-
-    fs.writeFileSync("cypress.json", JSON.stringify(data, null, 4));
-}
-
+rimraf.sync("cypress/integration/examples")
 createFile("dictionary.json")
 createFile("variables.json")
-editCypressJson()
+    /*verifyAndEditFile(indexFilePath, editMainIndexFile)
+    verifyAndEditFile(pluginsIndexFilePath, editPluginsIndexFile)*/
+verifyAndEditFile(cypressFilePath, editCypressJson)
