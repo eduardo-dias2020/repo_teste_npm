@@ -20,9 +20,10 @@
     "bin": {
         "testeCypress": "bin/Config",
         "FrameworkTestesE2E": "bin/FrameworkConfig"
-
     },
-    "scripts": {},
+    "scripts": {
+        "editCypressJsonFile": "node scripts/editCypressJson.js"
+    },
     "author": "Eduardo Carneiro",
     "license": "ISC"
 }
