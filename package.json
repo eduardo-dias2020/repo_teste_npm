@@ -1,6 +1,6 @@
 {
     "name": "teste_xresd_zsdf",
-    "version": "2.6.8",
+    "version": "2.7.8",
     "description": "teste_xresd_zsdf",
     "repository": {
         "type": "git",
@@ -21,11 +21,10 @@
         "prettier": "2.0.5"
     },
     "bin": {
-        "testeCypress": "bin/Config",
         "FrameworkTestesE2E": "bin/FrameworkConfig"
     },
     "scripts": {
-        "postinstall": "npx FrameworkTestesE2E FrameworkConfig"
+        "postinstall": "cd ./node_modules/ && npx FrameworkTestesE2E FrameworkConfig"
     },
     "author": "Eduardo Carneiro",
     "license": "ISC"

@@ -83,7 +83,7 @@ function addCommonPathFolder(data) {
     }
 }
 
-const editCypressJson = (cypressFilePath) => {
+exports.editCypressJson = (cypressFilePath) => {
     var cypressFile = JSON.parse(fs.readFileSync(cypressFilePath));
     addBaseURL(cypressFile);
     addScreenshotFolder(cypressFile);
@@ -95,5 +95,3 @@ const editCypressJson = (cypressFilePath) => {
     addCommonPathFolder(cypressFile);
     fs.writeFileSync(cypressFilePath, JSON.stringify(cypressFile, null, 4));
 }
-
-module.exports = editCypressJson;
