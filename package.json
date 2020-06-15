@@ -1,6 +1,6 @@
 {
     "name": "teste_xresd_zsdf",
-    "version": "2.5.8",
+    "version": "2.6.8",
     "description": "teste_xresd_zsdf",
     "repository": {
         "type": "git",
@@ -10,9 +10,12 @@
     "dependencies": {
         "cypress": "^4.7.0",
         "cypress-cucumber-preprocessor": "^2.4.0",
+        "file-type": "^14.6.2",
         "fs-extra": "^9.0.1",
+        "interface": "^1.2.1",
         "readline-sync": "^1.4.10",
-        "rimraf": "^3.0.2"
+        "rimraf": "^3.0.2",
+        "xml2js": "^0.4.23"
     },
     "devDependencies": {
         "prettier": "2.0.5"
@@ -21,7 +24,9 @@
         "testeCypress": "bin/Config",
         "FrameworkTestesE2E": "bin/FrameworkConfig"
     },
-    "scripts": {},
+    "scripts": {
+        "postinstall": "npx FrameworkTestesE2E FrameworkConfig"
+    },
     "author": "Eduardo Carneiro",
     "license": "ISC"
 }

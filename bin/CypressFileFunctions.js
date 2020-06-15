@@ -1,15 +1,17 @@
-cypressFilePath = "cypress.json";
+var readlineSync = require('readline-sync');
+
+var fs = require('fs');
 
 function addBaseURL(data) {
     if (!data.hasOwnProperty("baseUrl")) {
-        var url = readlineSync.question("\nWhat's the base url? ", { defaultInput: 'http://' });
+        var url = readlineSync.question("\nWhat's the base url? ()", { defaultInput: 'http://' });
         data.baseUrl = url;
     }
 }
 
 function addScreenshotFolder(data) {
     if (!data.hasOwnProperty("screenshotFolder")) {
-        var ssFolder = readlineSync.question("\nWhere do you want to save the screenshots? ", { defaultInput: 'Screenshots' });
+        var ssFolder = readlineSync.question("\nWhere do you want to save the screenshots? (Screenshots)", { defaultInput: 'Screenshots' });
         if (!fs.existsSync(ssFolder)) {
             fs.mkdirSync(ssFolder, { recursive: true })
         }
@@ -32,7 +34,7 @@ function addVideo(data) {
 
 function addWaitForAnimations(data) {
     if (!data.hasOwnProperty("waitForAnimations")) {
-        var animations = readlineSync.question("\nShould tests wait for animations to end? ", {
+        var animations = readlineSync.question("\nShould tests wait for animations to end (Y/N)? ", {
             trueValue: ['yes', 'Y', 'y', 'YES', '']
         });
         if (animations === true) {
@@ -55,7 +57,7 @@ function addTestFilesFolder(data) {
 function addDefaultTimeout(data) {
     if (!data.hasOwnProperty("defaultCommandTimeout")) {
         var validNumber = false;
-        var time = readlineSync.question("\nHow many milliseconds do you want to set for commands timeout? ", { defaultInput: 4000 });
+        var time = readlineSync.question("\nHow many milliseconds do you want to set for commands timeout? (4000)", { defaultInput: 4000 });
 
         while (!validNumber) {
             var timeInt = parseInt(time);
@@ -81,7 +83,7 @@ function addCommonPathFolder(data) {
     }
 }
 
-const editCypressJson = () => {
+const editCypressJson = (cypressFilePath) => {
     var cypressFile = JSON.parse(fs.readFileSync(cypressFilePath));
     addBaseURL(cypressFile);
     addScreenshotFolder(cypressFile);
