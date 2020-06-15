@@ -24,7 +24,7 @@
         "FrameworkTestesE2E": "bin/FrameworkConfig"
     },
     "scripts": {
-        "postinstall": "cd ../node_modules/"
+        "postinstall": "cd ./../../"
     },
     "author": "Eduardo Carneiro",
     "license": "ISC"
