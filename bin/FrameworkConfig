@@ -16,8 +16,12 @@ const cypressFilePath = "cypress.json";
 function createFile(file) {
     try {
         if (!fs.existsSync(file)) {
+            var content;
+            if (file.split('.').pop() === "json")
+                content = "{}"
+
             try {
-                fs.writeFileSync(file, '', function(err) {
+                fs.writeFileSync(file, content, function(err) {
                     if (err) throw err;
                     console.log("File " + file + " created successfully.");
                 });

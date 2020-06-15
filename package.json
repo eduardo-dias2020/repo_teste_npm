@@ -1,6 +1,6 @@
 {
     "name": "teste_xresd_zsdf",
-    "version": "2.9.8",
+    "version": "3.0.0",
     "description": "teste_xresd_zsdf",
     "repository": {
         "type": "git",
@@ -24,7 +24,7 @@
         "FrameworkTestesE2E": "bin/FrameworkConfig"
     },
     "scripts": {
-        "testeExecutar": "cd ./node_modules/ && npx FrameworkTestesE2E FrameworkConfig"
+        "testeExecutar": "npx FrameworkTestesE2E FrameworkConfig"
     },
     "author": "Eduardo Carneiro",
     "license": "ISC"
