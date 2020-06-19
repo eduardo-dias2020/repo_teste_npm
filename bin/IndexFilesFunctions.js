@@ -1,6 +1,7 @@
 var readlineSync = require('readline-sync');
 var fs = require('fs');
 
+const projectConfigurationFilePath = "projectConfiguration.json"
 var platforms = ['ATD'];
 
 function setWhiteList() {
@@ -18,13 +19,15 @@ function setWhiteList() {
 }
 
 exports.editMainIndexFile = (indexFilePath) => {
+    var projectConfigurationFile = JSON.parse(fs.readFileSync(projectConfigurationFilePath));
+    var fileTestVariablesPath = projectConfigurationFile.testVariablesFilePath
+    var fileDictionaryPath = projectConfigurationFile.dictionaryFilePath
     var whiteList = setWhiteList();
-    var cypressInitialConfig = "// ***********************************************************\r\n// This example support/index.js is processed and\r\n// loaded automatically before your test files.\r\n//\r\n// This is a great place to put global configuration and\r\n// behavior that modifies Cypress.\r\n//\r\n// You can change the location of this file or turn off\r\n// automatically serving support files with the\r\n// 'supportFile' configuration option.\r\n//\r\n// You can read more here:\r\n// https://on.cypress.io/configuration\r\n// ***********************************************************\r\n\r\n// Import commands.js using ES2015 syntax:\r\nimport './commands'\r\n\r\n// Alternatively you can use CommonJS syntax:\r\n// require('./commands')"
     var importRequire = "\r\nimport 'cypress-pipe'\r\nrequire('cypress-commands');\r\n\r\nconst WaitFunctions = require(\"framework_glintt_tests_e2e/WaitFunctions\");\r\nconst ProcessFilesFunctions = require(\"framework_glintt_tests_e2e/ProcessFilesFunctions\");\r\nconst addContext = require('mochawesome/addContext')"
     var saveScreenshots = "\r\n\r\n/**\r\n * Function to save a screenshot after each failed test;\r\n * Essencial to build reports.\r\n */\r\nCypress.on('test:after:run', (test, runnable) => {\r\n    if (test.state === 'failed') {\r\n        const screenshotFileName = `${runnable.parent.title} -- ${test.title} (failed).png`\r\n        addContext({ test }, `assets/${Cypress.spec.name}/${screenshotFileName}`)\r\n    }\r\n})"
     var checkXHR = "\n\n/**\r\n * Function to setup a cypress server before each test;\r\n * Server configured to count active XHR requests.\r\n */\r\nbeforeEach(() => {\r\n    WaitFunctions.checkXHRequests();    \r\n})"
-    var readFiles = "\r\n\r\n/**\r\n * Function to read the necessary files before the tests start;\r\n */\r\nbefore(() => {\r\n    cy.readFile(\"variables.json\").then(fileVariables => {\r\n        ProcessFilesFunctions.setFileJsonVariables(fileVariables);\r\n    });\r\n    cy.readFile(\"dictionary.json\").then(fileDictionary => {\r\n        ProcessFilesFunctions.setFileDictionary(fileDictionary);\r\n    });\r\n})"
-    fs.appendFileSync(indexFilePath, cypressInitialConfig + importRequire + whiteList + saveScreenshots + checkXHR + readFiles, { 'flags': 'a' });
+    var readFiles = "\r\n\r\n/**\r\n * Function to read the necessary files before the tests start;\r\n */\r\nbefore(() => {\r\n    cy.readFile(\"" + fileTestVariablesPath + "\").then(fileVariables => {\r\n        var fileVariablesFormat = (\"" + fileTestVariablesPath + "\").split('.').pop().toUpperCase();\r\n        ProcessFilesFunctions.setfileVariables(fileVariables,fileVariablesFormat);\r\n    });\r\n    cy.readFile(\"" + fileDictionaryPath + "\").then(fileDictionary => {\r\n        var fileDictionaryFormat = (\"" + fileDictionaryPath + "\").split('.').pop().toUpperCase();\r\n        ProcessFilesFunctions.setFileDictionary(fileDictionary, fileDictionaryFormat);\r\n    });\r\n})"
+    fs.appendFileSync(indexFilePath, importRequire + whiteList + saveScreenshots + checkXHR + readFiles, { 'flags': 'a' });
 }
 
 exports.editPluginsIndexFile = (pluginsIndexFilePath) => {
