@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 var fs = require('fs');
-var rimraf = require('rimraf')
 
 const { editCypressJson } = require('./CypressFileFunctions');
 
@@ -13,10 +12,12 @@ const pluginsIndexFilePath = "./cypress/plugins/index.js";
 
 const cypressFilePath = "cypress.json";
 
+const projectConfigurationFilePath = "projectConfiguration.json"
+
 function createFile(file) {
     try {
         if (!fs.existsSync(file)) {
-            var content;
+            var content = "";
             if (file.split('.').pop() === "json")
                 content = "{}"
 
@@ -36,6 +37,17 @@ function createFile(file) {
     }
 }
 
+function projectConfiguration() {
+    createFile(projectConfigurationFilePath)
+    var projectConfigurationFile = JSON.parse(fs.readFileSync(projectConfigurationFilePath));
+    var pathDic = readlineSync.question("\n Insert path to create the file that will have the dictionary of elements (dictionary.json) ", { defaultInput: "dictionary.json" });
+    createFile(pathDic)
+    projectConfigurationFile.dictionaryFilePath = pathDic;
+    var pathVar = readlineSync.question("\n Insert path to create the file that will have the variables used in the tests (testVariables.json) ", { defaultInput: "testVariables.json" });
+    createFile(pathVar)
+    projectConfigurationFile.testVariablesFilePath = pathVar;
+    fs.writeFileSync(projectConfigurationFilePath, JSON.stringify(projectConfigurationFile, null, 4));
+}
 
 
 function verifyAndEditFile(filePath, fileFunction) {
@@ -62,8 +74,7 @@ function setupCypress() {
 }
 
 setupCypress()
-createFile("dictionary.json")
-createFile("variables.json")
+projectConfiguration()
 verifyAndEditFile(indexFilePath, editMainIndexFile)
 verifyAndEditFile(pluginsIndexFilePath, editPluginsIndexFile)
 verifyAndEditFile(cypressFilePath, editCypressJson)
