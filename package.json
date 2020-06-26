@@ -1,6 +1,6 @@
 {
-    "name": "teste_xresd_zsdf",
-    "version": "3.1.7",
+    "name": "@teste/teste_xresd_zsdf",
+    "version": "3.1.8",
     "description": "teste_xresd_zsdf",
     "repository": {
         "type": "git",
@@ -27,5 +27,12 @@
         "postinstall": "cd ./../../ && npx FrameworkTestesE2E FrameworkConfig"
     },
     "author": "Eduardo Carneiro",
-    "license": "ISC"
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/eduardo-dias2020/repo_teste_npm/issues"
+    },
+    "homepage": "https://github.com/eduardo-dias2020/repo_teste_npm#readme",
+    "keywords": [
+        "Cypress"
+    ]
 }
