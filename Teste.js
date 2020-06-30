@@ -1,13 +1,12 @@
+const ClasseTeste = require("./ClasseTeste")
+
 class Teste {
     static testeVar = "Bonito"
 
     static setTeste() {
-        this.testeVar = "Top"
+        ClasseTeste.imprimir();
     }
 
-    static print() {
-        console.log(this.testeVar)
-    }
 }
 
 module.exports = Teste;
